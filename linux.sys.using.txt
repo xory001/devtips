@@ -1,0 +1,17 @@
+1. cent5 升级内置的 ca 证书
+  --https://codeday.me/bug/20181106/356186.html，
+  --key op： curl https://curl.haxx.se/ca/cacert.pem -o /etc/pki/tls/certs/ca-bundle.crt，
+  --
+  
+2. 升级 openssl
+  --https://www.cnblogs.com/emanlee/p/6100019.html
+  
+3. 升级 perl， 使用 perlbrew
+  --https://www.howtoing.com/how-to-install-perlbrew-and-manage-multiple-versions-of-perl-5-on-centos-7
+  
+4. centos5 修改 yum源
+  --http://www.baddb.com/511.html
+  
+5. 同步 ntp 时间时解决the NTP socket is in use, exiting问题
+  --https://blog.csdn.net/ytp151730/article/details/48373679
+  --时间服务器： pool.ntp.org
