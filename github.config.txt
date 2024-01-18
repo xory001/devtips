@@ -1,0 +1,17 @@
+1. 配置 git ssh 代理：
+https://github.com/MaoningGuan/git-ssh-proxy
+
+2. 配置 TortoiseGit ssh 方法以及 main 分支
+https://wmf.im/p/git%E4%BD%BF%E7%94%A8%E7%AC%94%E8%AE%B0/
+
+3. git 的 origin master 是什么意思
+https://blog.twofei.com/695/
+
+4. TortoiseGit将本地仓库上传到远程仓库
+https://developer.aliyun.com/article/1096703
+
+5. TortoiseGit乌龟git添加公钥密钥和私钥认证，实现乌龟git同步免密码输入
+https://blog.csdn.net/qq_34405576/article/details/110163827
+
+6. PuTTY的ppk密钥与OpenSSH密钥之间的相互转换
+https://www.jianshu.com/p/7818b3ad1d72 
