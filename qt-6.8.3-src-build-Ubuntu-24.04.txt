@@ -1,4 +1,3 @@
-Ubuntu 24.04
 安装好系统后，一次执行下述命令
 
 #解决复制粘贴不能共享的问题
@@ -83,30 +82,33 @@ To configure and build other Qt modules, you can use the following convenience s
 安装好了以后，
 In .profile (if your shell is bash, ksh, zsh or sh), add the following lines:
 
-PATH=/usr/local/Qt-6.8.4/bin:$PATH
+PATH=/opt/qt-6.8-x64/bin:$PATH
 export PATH
 
 In .login (if your shell is csh or tcsh), add the following line:
 
-setenv PATH /usr/local/Qt-6.8.4/bin:$PATH
+setenv PATH /opt/qt-6.8-x64/bin:$PATH
 
 10. 编译 qt cmake 工程 qmlAllInOne
    cd qmlAllInOne
    mkdir build
    cd build/
-   cmake .. -DCMAKE_PREFIX_PATH=/opt/qt-6.8-x64 -DCMAKE_BUILD_TYPE=Release
+   cmake -S .. -DCMAKE_PREFIX_PATH=/opt/qt-6.8-x64 -DCMAKE_BUILD_TYPE=Release
    cmake --build . --parallel
    ./appqmlAllInOne
 
 11. 打包
+需要提供 .desktop 文件和程序图标
+sudo apt install libfuse2
 wget https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
 chmod +x linuxdeployqt-continuous-x86_64.AppImage
 sudo mv linuxdeployqt-continuous-x86_64.AppImage /usr/local/bin/linuxdeployqt
 
+
 cd build
 ./appqmlAllInOne  # 确保能本地运行
 
-linuxdeployqt ./appqmlAllInOne -qmldir=../qml -appimage
+linuxdeployqt ./appqmlAllInOne -qmldir=../qml -appimage -unsupported-allow-new-glibc
 
 
 
