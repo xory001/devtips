@@ -1,0 +1,169 @@
+1. 官方参考文档：
+https://doc.embedfire.com/linux/rk3588/quick_start/zh/latest/quick_start/flash_img/flash_img.html
+
+1.1 官方刷机说明：
+24版本ubuntu需要使用以下的镜像刷机方法！
+24版本ubuntu需要使用以下的镜像刷机方法！
+24版本ubuntu需要使用以下的镜像刷机方法！
+ 
+ 
+24版本ubuntu设备树插件参考本文档最后！
+ 
+--------------------------------------------------------------------------------------------------------------
+刷机方法：
+--------------------------------------------------------------------------------------------------------------
+刷入EMMC：
+使用当前目录的烧录工具
+打开RKDevTool.exe工具，进入maskrom模式，
+1.选择“下载镜像”下面有名字写着：boot  system
+2.“boot”选择当前目录工具文件夹里面自带名是“rk3588_MiniLoaderAll.bin”点击右边“...”选择bin
+3.“sysem”选择下载好的镜像，ubuntu**.xz压缩包，进行解压出镜像.img，点击右边“...”选择镜像.img
+4.下方 打勾“强制按地址写”
+5.最后点击“执行”正在刷入，等待结束。
+  
+刷入SD卡：
+1.使用工具烧录，rufus，win32diskimager，balenaEtcher三种，选个工具，推荐 rufus，免安装，包又小
+rufus安装包在-》 网盘/6-开发软件/rufus-4.3.exe
+rufus如需安装其他版本，可从 https://rufus.ie/zh/ 下载
+2.打开rufus，插上SD卡，点击“选择”镜像，可以不用解压，直接选上，点击开始烧录。等待写卡结束即可。
+--------------------------------------------------------------------------------------------------------------
+ 
+ 
+ 
+--------------------------------------------------------------------------------------------------------------
+使用：
+--------------------------------------------------------------------------------------------------------------
+1. 对于服务版镜像（server），您将能够通过 HDMI 或TTL串行控制台连接登录。
+   20240105日期之前的镜像预定义用户为ubuntu，密码为ubuntu
+   20240105日期及以后的镜像预定义用户为cat，密码为temppwd
+ 
+2. 对于桌面版镜像（desktop），您必须通过 HDMI 连接。
+    20240105日期之前的镜像需要向导操作。
+    20240105日期及以后的镜像不需要向导操作，用户为cat，密码为temppwd
+--------------------------------------------------------------------------------------------------------------
+ 
+ 
+ 
+ 
+--------------------------------------------------------------------------------------------------------------
+设备树插件：
+--------------------------------------------------------------------------------------------------------------
+设备树插件配置文件位置为：  /boot/firmware/ubuntuEnv.txt
+设备树插件存放位置为：     /boot/firmware/dtbs/rockchip/overlay
+ 
+如果需要加载设备树插件开启外设，打开/boot/firmware/ubuntuEnv.txt配置文件
+ 
+在overlays=添加需要加载的设备树插件，例如开启3个i2c，格式如下：
+ 
+overlays= rk3588-lubancat-i2c2-m4-overlay rk3588-lubancat-i2c3-m1-overlay rk3588-lubancat-i2c5-m3-overlay
+ 
+ 
+也可以使用fire-config进行配置，配置后自动将所选插件添加到/boot/firmware/ubuntuEnv.txt的"overlays="
+--------------------------------------------------------------------------------------------------------------
+
+====================
+====================
+====================
+以下为朱起伟编写：
+
+2. 刷入 Ubuntu 24 野火官方鲁班猫5 IO版系统镜像
+2.1 镜像
+  参考 1.1 官方说明  
+2.2 流程
+  连接开发板的 type c 接口到主机，启动 RKDevTool.exe v3.15，选择好镜像，断开开发板电源，按住 maskrom 键， 上电， RKDevTool.exe 提示发现 MASKROM 设备， 松开按钮，选择 “强制按照地址写入”，点击执行。
+2.2.1 替换系统logo
+  不要登录图形系统，直接 ctrl + alt + f3， 查看有线网卡 ip，然后远程 ssh，
+  替换三张图片，启动界面中间的鲁班猫大图，底部的 Ubuntu 小图，登录界面底部的鲁班猫小图
+  鲁班猫大图： /usr/share/plymouth/themes/spinner/bgrt-fallback.png
+  Ubuntu 小图：  /usr/share/plymouth/themes/spinner/watermark.png
+  鲁班猫小图：/usr/share/plymouth/ubuntu-logo.png
+  执行 deploy 下的 update.logo.sh 即可
+  然后重启系统。
+
+2.2.1.0 关闭屏幕自动关闭功能，关闭更新功能
+  设置 -> 电源 -> 息屏，选则 “从不”
+  软件和更新 -> 更新 -> 自动检查更新 -> 选则“从不”
+
+2.2.2 安装英文语言包，重启，登录后再切换系统到英文，格式为美国，重启，
+  再到区域设置里面，点击 system-wide，这样才可以让登录界面和 ssh 登录全都变成英文
+2.2.2.1 接着安装韩语，日语语言包
+
+
+2.2.2 登录系统，根据提示更新系统组件，如果更新程序卡住
+  可以远程 ssh，执行 sudo apt update && sudo apt upgrade 更新组件
+  然后关闭自动更新功能
+
+2.2.3 sudo apt install libxcb-cursor0   libxkbcommon-dev libvulkan-dev dos2unix
+
+
+
+3. 配置硬件
+3.1 运行 sudo fire-config， 选择“P2 外设”， 移动方向键到 "34 uart4-m2"（即开发板上的 rs232 端口），按空格选中，然后回车，再通过按 ESC 退出该界面。
+3.2 普通用户使用串口，方便调试
+   sudo usermod -a -G dialout $USER #加入 dialout 组
+
+4. 运行环境配置
+4.1 把 qt-6.8-arm64.tar.gz 解压到 /opt/qt-6.8.arm64
+    执行 tar -xzf qt-6.8-arm64.tar.gz
+    sudo mv qt-6.8-arm64 /opt/
+
+
+5. 制作系统镜像
+ 参考 鲁班猫5.IO板-Ubuntu24系统镜像备份与烧录说明.txt
+ 注意： 制造好的系统镜像，必须用 RKDevTool.exe v2.86 才可以刷入开发板，其他版本不行
+
+
+
+
+
+=====================
+=====================
+=====================
+
+以下为参考资料：
+5. 编译 qt 程序
+  在 8+128 的猫5开发板上，使用 arm64-build-by-qtsrc.sh 编译程序（该机已经安装好开发环境，并且使用 qt-6.8.3 源码编译的出来的程序安装在 /opt/qt-6.8-arm64 ），
+  注意，使用该脚本编译的 qt 程序， 默认的 qt lib 地址指向 /opt/qt-6.8-arm64/lib, 即脚本里面的 ${QT_DIR}/lib
+  （使用 readelf -d appLaserAestheticTherapySystem， 查看 RUNPATH 所在行， 或者 objdump -x appLaserAestheticTherapySystem | grep RUNPATH ） 
+
+6. 随机启动
+6.1 a. 查看默认启动的服务器
+  systemctl get-default
+	graphical.target
+	
+	b. 查看 graphical.target 内容：
+	systemctl cat graphical.target
+	
+	c. 设置默认启动服务：
+	sudo systemctl set-default qtapp.target
+	
+	d. 如果需要临时进入图形界面：
+
+	sudo systemctl stop myapp.service
+	sudo systemctl start gdm   # GNOME
+	# 或
+	sudo systemctl start lightdm   # LXDE / XFCE / KDE 等
+
+  下次开机依然是直接进 Qt 程序，除非你改默认 target：
+
+  sudo systemctl set-default graphical.target   # 永远进桌面
+  sudo systemctl set-default multi-user.target  # 永远进Qt全屏
+
+6.2 运行 deploy 下的 install.lats.sh
+    查看服务启动日志： sudo journalctl -u lats.service -b -e
+
+6.3  kms.config
+    qt  程序 eglfs 模式时显示鼠标光标需要指定该文件
+    参考内容：
+    {
+      "device": "/dev/dri/card0",
+      "hwcursor": false,
+      "pbuffers": true,
+      //outputs 不需要也不影响
+      "outputs": [
+        {
+          "name": "HDMI1",
+          "mode": "1920x1080"
+        }
+      ]
+    }
