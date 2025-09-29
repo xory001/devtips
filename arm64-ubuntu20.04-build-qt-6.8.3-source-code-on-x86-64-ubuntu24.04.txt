@@ -1,0 +1,17 @@
+0：在 x86-64 Ubuntu 24.04 虚拟机上交叉编译目标系统为 RK3568(鲁班猫2) Ubuntu 20.04 的 qt-6.8 源码 
+
+1. 编译 x86-64 的 qt-6.8 源码 
+  先在 X86-64 Ubuntu 24.04 上编译 qt-6.8 源码，编译结果拷贝到 /opt/qt-6.8-x64
+2. 安装 arm64 g++ gcc
+ sudo apt update
+ sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu 
+ 
+3. 创建 qt-6.8-build-arm64
+   然后 cd qt-6.8-build-arm64
+   运行命令
+   sudo ../qt-everywhere-src-6.8.3/configure -release -opengl es2 -nomake examples -nomake tests \
+  -qt-host-path /opt/qt-6.8-x64 \
+  -extprefix /opt/ext-qt-6.8-build-arm64 \
+  -prefix /opt/qt-6.8-arm64 \
+  -- -DCMAKE_TOOLCHAIN_FILE=$HOME/xory.doc/rk3568-ubunt20.04-toolchain.cmake
+   
