@@ -1,18 +1,20 @@
 安装好系统后，一次执行下述命令
 
-#解决复制粘贴不能共享的问题
+1. 安装必要的组件
+1.1 升级系统组件
+  sudo apt upate && sudo apt upgrade -y
+  sudo reboot
+  
+1.2 安装网络工具和 ssh 服务
+	sudo apt install -y net-tools ssh
+	
+1.3 解决复制粘贴不能共享的问题
 sudo apt purge open-vm-tools open-vm-tools-desktop -y
 sudo apt autoremove -y
 sudo apt install open-vm-tools open-vm-tools-desktop -y
 sudo reboot
 
-sudo apt install -y net-tools ssh
 
-
-# 解决自动息屏唤醒后黑屏的问题
-# https://askubuntu.com/questions/1515938/how-to-fix-freezing-ubuntu-24-04-on-vmware-and-enable-accelerated-graphics
-sudo add-apt-repository ppa:oibaf/graphics-drivers
-sudo apt update && sudo apt upgrade
 
 #编译 qt 6.8.3 源代码
 1. 安装官方文档所需要的工具

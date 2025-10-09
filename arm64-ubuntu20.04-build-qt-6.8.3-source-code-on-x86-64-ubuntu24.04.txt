@@ -1,4 +1,4 @@
-0：在 x86-64 Ubuntu 24.04 虚拟机上交叉编译目标系统为 RK3568(鲁班猫2) Ubuntu 20.04 的 qt-6.8 源码 
+0：在 x86-64 Ubuntu 20.04 虚拟机上交叉编译目标系统为 RK3568(鲁班猫2) Ubuntu 20.04 的 qt-6.8 源码 
 
 1. 编译 x86-64 的 qt-6.8 源码 
   先在 X86-64 Ubuntu 24.04 上编译 qt-6.8 源码，编译结果拷贝到 /opt/qt-6.8-x64
@@ -6,12 +6,23 @@
  sudo apt update
  sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu 
  
-3. 创建 qt-6.8-build-arm64
+3.0 根据 arm64-ubuntu20.04-build-qt-6.8.3-source-code.txt
+  在鲁班猫2上安装对应的支持库
+  
+3.1 创建 sysroot 文件压缩包
+    sudo tar -czf /tmp/rk3568-ubuntu20.04-sysroot.tar.gz /lib /usr/include /usr/lib /usr/libexec /usr/lib64 /usr/share/pkgconfig
+    复制该压缩包到 x84 Ubuntu20.04，解压，然后执行
+    mv rk3568-ubuntu20.04-sysroot/usr/lib/aarch64-linux-gnu/libdbus-1.a rk3568-ubuntu20.04-sysroot/usr/lib/aarch64-linux-gnu/libdbus-1.a.bak
+ 
+3.1 创建 qt-6.8-build-arm64
    然后 cd qt-6.8-build-arm64
    运行命令
-   sudo ../qt-everywhere-src-6.8.3/configure -release -opengl es2 -nomake examples -nomake tests \
+ ../qt-everywhere-src-6.8.3/configure -release  -nomake examples -nomake tests \
   -qt-host-path /opt/qt-6.8-x64 \
-  -extprefix /opt/ext-qt-6.8-build-arm64 \
+  -extprefix ${HOME}/xoryDoc/pre-qt-6.8-arm64/ \
   -prefix /opt/qt-6.8-arm64 \
-  -- -DCMAKE_TOOLCHAIN_FILE=$HOME/xory.doc/rk3568-ubunt20.04-toolchain.cmake
+  -- -DCMAKE_TOOLCHAIN_FILE=${HOME}/xoryDoc/rk3568-ubuntu20.04-toolchain.cmake
+ 
+ 
+ # -DQT_FEATURE_system_webp=ON
    
