@@ -1,22 +1,32 @@
-安装好系统后，一次执行下述命令
+x86-64, ubuntu 24.04 编译 qt 6.8.3 源代码
 
-#解决复制粘贴不能共享的问题
+1. 安装必要的组件
+1.0 升级系统组件
+  sudo apt upate && sudo apt upgrade -y
+  sudo reboot
+  
+1.1 解决自动息屏唤醒后黑屏的问题
+# https://askubuntu.com/questions/1515938/how-to-fix-freezing-ubuntu-24-04-on-vmware-and-enable-accelerated-graphics
+sudo add-apt-repository ppa:oibaf/graphics-drivers
+sudo apt update && sudo apt upgrade
+
+1.2 安装网络工具和 ssh 服务
+	sudo apt install -y net-tools ssh
+	
+1.3 解决复制粘贴不能共享的问题
 sudo apt purge open-vm-tools open-vm-tools-desktop -y
 sudo apt autoremove -y
 sudo apt install open-vm-tools open-vm-tools-desktop -y
 sudo reboot
 
-sudo apt install -y net-tools ssh
+
+1.4 安装开发工具
+sudo apt install -y cmake-mozilla g++ ninja-build clang-18 libclang-18-dev llvm-18
 
 
-# 解决自动息屏唤醒后黑屏的问题
-# https://askubuntu.com/questions/1515938/how-to-fix-freezing-ubuntu-24-04-on-vmware-and-enable-accelerated-graphics
-sudo add-apt-repository ppa:oibaf/graphics-drivers
-sudo apt update && sudo apt upgrade
-
-#编译 qt 6.8.3 源代码
-1. 安装官方文档所需要的工具
-sudo apt install \
+#2. 编译 qt 6.8.3 源代码
+2.1. 安装官方文档所需要的工具
+sudo apt install -y \
     libfontconfig1-dev \
     libfreetype-dev \
     libgtk-3-dev \
@@ -43,36 +53,23 @@ sudo apt install \
     libxkbcommon-x11-dev \
     libxrender-dev
 
-2. 安装 sudo apt install g++ cmake ninja-build nodejs
-3. 安装 clang 相关
-sudo apt install clang-18 libclang-18-dev llvm-18-dev clang
-4. 安装低级音频模块后端
-sudo apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libpulse-dev
+2.2. 安装低级音频模块后端
+sudo apt install -y \
+  libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libpulse-dev
 
-5. 安装 html5lib, 如果不编译 qt web engine，可以不用安装
-sudo apt install python3-html5lib
+2.3. 安装 html5lib nodejs, 如果不编译 qtwebengine，可以不用安装
+sudo apt install python3-html5lib nodejs
 
-6. 安装 qpa-xcb 支持库
-sudo apt install libx11-dev libxext-dev libxfixes-dev libxi-dev libxrender-dev libxcb1-dev libxcb-glx0-dev libxcb-keysyms1-dev libxcb-image0-dev libxcb-shm0-dev libxcb-icccm4-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-shape0-dev libxcb-randr0-dev libxcb-render-util0-dev libxcb-xinerama0-dev libxkbcommon-dev libxkbfile-dev libdrm-dev libxshmfence-dev
+2.4. 根据chatgpt给的建议, 安装支持库
+sudo apt install -y libdrm-dev libpciaccess-dev libxcb-xinerama0 \
+  libxcb-xinerama0-dev libxkbfile-dev libxshmfence-dev \
+  libsqlite3-dev libssl-dev libudev-dev
 
-7. 根据chatgpt给的建议，一次性安装支持库
-sudo apt install build-essential \
-    libgl1-mesa-dev libxcb1-dev libxcb-xkb-dev libx11-xcb-dev \
-    libxkbcommon-dev libfontconfig1-dev libfreetype6-dev \
-    libssl-dev libsqlite3-dev libpulse-dev libudev-dev \
-    libgtk-3-dev libxext-dev libxfixes-dev libxi-dev \
-    libxrender-dev libxcb-render0-dev libxcb-shm0-dev \
-    libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev \
-    libxcb-randr0-dev libxcb-xinerama0-dev libxcb-util-dev \
-    libxkbfile-dev libdrm-dev libxshmfence-dev
-
-
-
-8. 配置
+2.5. 配置
    创建 build-qt-6.8，进入后运行以下命令行，根据情况加 sudo
-  ../qt-everywhere-src-6.8.3/configure -prefix /opt/qt-6.8-x64 -- -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON -DCMAKE_BUILD_TYPE=Release
+  ../qt-everywhere-src-6.8.3/configure -prefix /opt/qt-6.8-x64 -nomake examples -nomake tests -- -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON -DCMAKE_BUILD_TYPE=Release
 
-9. 编译，根据情况加 sudo
+2.6. 编译，根据情况加 sudo
 Qt is now configured for building. Just run 'cmake --build . --parallel'
 
 Once everything is built, you must run 'cmake --install .'
@@ -91,7 +88,7 @@ In .login (if your shell is csh or tcsh), add the following line:
 
 setenv PATH /opt/qt-6.8-x64/bin:$PATH
 
-10. 编译 qt cmake 工程 qmlAllInOne
+#3. 编译 qt cmake 工程 qmlAllInOne
    cd qmlAllInOne
    mkdir build
    cd build/
@@ -111,7 +108,3 @@ cd build
 ./appqmlAllInOne  # 确保能本地运行
 
 linuxdeployqt ./appqmlAllInOne -qmldir=../qml -appimage -unsupported-allow-new-glibc
-
-
-
-
