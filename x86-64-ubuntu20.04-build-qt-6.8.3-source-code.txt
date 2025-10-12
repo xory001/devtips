@@ -24,7 +24,7 @@ x86-64, ubuntu 20.04 编译 qt 6.8.3 源代码
 
 1.5 安装 ffmpeg 6.1.3
    #安装需要的库
-   sudo apt update && sudo apt install -y \
+   sudo apt install -y \
    nasm yasm \
    libass-dev libfreetype6-dev libfribidi-dev pkg-config \
    libmp3lame-dev libopus-dev libx264-dev libx265-dev \
@@ -139,6 +139,15 @@ export PATH
 In .login (if your shell is csh or tcsh), add the following line:
 
 setenv PATH /opt/qt-6.8-x64/bin:$PATH
+
+2.7 单独编译模块
+   以编译 qtmultimedia 模块为例子
+   创建目录 qt-6.8-x64-qtmultimedia-build
+   mkdir qt-6.8-x64-qtmultimedia-build && cd qt-6.8-x64-qtmultimedia-build
+   #通过 FFMPEG_DIR 指定 ffmepg 路径
+   /opt/qt-6.8-x64/bin/qt-configure-module ../qt-everywhere-src-6.8.3/qtmultimedia/ FFMPEG_DIR=/opt/ffmpeg-6.1.3
+   cmake --build . --parallel
+   sudo cmake --install .
 
 #3. 编译 qt cmake 工程 qmlAllInOne
    cd qmlAllInOne

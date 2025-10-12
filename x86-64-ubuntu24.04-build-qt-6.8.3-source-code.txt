@@ -139,10 +139,12 @@ setenv PATH /opt/qt-6.8-x64/bin:$PATH
 
 2.7 单独编译模块
    以重新编译 qtmultimedia 模块以支持 vaapi 插件为例子
-   创建目录 qt-6.8-x64-vaapi-build
-   mkdir qt-6.8-x64-vaapi-build && cd qt-6.8-x64-vaapi-build
+   创建目录 qt-6.8-x64-qtmultimedia-build
+   mkdir qt-6.8-x64-qtmultimedia-build && cd qt-6.8-x64-qtmultimedia-build
    sudo apt install -y libva-dev libva-drm2 libva-x11-2 libvdpau-dev 
    /opt/qt-6.8-x64/bin/qt-configure-module ../qt-everywhere-src-6.8.3/qtmultimedia
+   #也可以通过 FFMPEG_DIR 指定 ffmepg 路径
+   #/opt/qt-6.8-x64/bin/qt-configure-module ../qt-everywhere-src-6.8.3/qtmultimedia/ FFMPEG_DIR=/opt/ffmpeg-6.1.3
    cmake --build . --parallel
    sudo cmake --install .
 
