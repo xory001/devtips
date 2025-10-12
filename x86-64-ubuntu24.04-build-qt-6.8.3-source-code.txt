@@ -1,4 +1,34 @@
 x86-64, ubuntu 24.04 编译 qt 6.8.3 源代码
+2025.10.12 更新， xory.corp@outlook.com
+#没有编译 QtWebEngine, QtPdf 模块
+#多媒体支持
+Qt Multimedia:
+  Spatial Audio .......................... yes
+  Spatial Audio (Quick3D) ................ yes
+  Low level Audio Backend:
+    ALSA (experimental) .................. no
+    PulseAudio ........................... yes
+    MMRenderer ........................... no
+    CoreAudio ............................ no
+    Windows Media SDK .................... no
+    Open SLES (Android) .................. no
+    Web Assembly ......................... no
+  Plugin:
+    QtMM GStreamer plugin ................ yes
+    FFmpeg ............................... yes
+    FFmpeg plugin features:
+      PipeWire screen capture ............ no
+    MMRenderer ........................... no
+    AVFoundation ......................... no
+    Windows Media Foundation ............. no
+    Native Android backend (deprecated) .. no
+  Hardware acceleration and features:
+    Video for Linux ...................... yes
+    VAAPI support ........................ yes
+    Linux DMA buffer support ............. yes
+    VideoToolbox ......................... no
+  
+###    
 
 1. 安装必要的组件
 1.0 升级系统组件
@@ -21,7 +51,9 @@ sudo reboot
 
 
 1.4 安装开发工具
-sudo apt install -y cmake-mozilla g++ ninja-build clang-18 libclang-18-dev llvm-18
+sudo apt install -y cmake g++ ninja-build clang-18 libclang-18-dev llvm-18
+#交叉编译工具
+ sudo apt install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 
 
 #2. 编译 qt 6.8.3 源代码
@@ -56,6 +88,19 @@ sudo apt install -y \
 2.2. 安装低级音频模块后端
 sudo apt install -y \
   libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libpulse-dev
+  
+2.2.1 安装多媒体后端，ffmpeg 和 gstreamer
+  sudo apt install -y \
+    libavcodec-dev libavformat-dev libavutil-dev libswresample-dev libswscale-dev \
+    libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
+    libgstreamer-plugins-good1.0-dev libgstreamer-plugins-bad1.0-dev
+    
+2.2.2 支持 vapi，可选
+   sudo apt install -y libva-dev libva-drm2 libva-x11-2 libvdpau-dev 
+   
+2.2.3 #查询 VA API 支持
+  sudo apt install -y vainfo
+ 
 
 2.3. 安装 html5lib nodejs, 如果不编译 qtwebengine，可以不用安装
 sudo apt install python3-html5lib nodejs
@@ -63,11 +108,15 @@ sudo apt install python3-html5lib nodejs
 2.4. 根据chatgpt给的建议, 安装支持库
 sudo apt install -y libdrm-dev libpciaccess-dev libxcb-xinerama0 \
   libxcb-xinerama0-dev libxkbfile-dev libxshmfence-dev \
-  libsqlite3-dev libssl-dev libudev-dev
+  libsqlite3-dev libssl-dev libudev-dev libhunspell-dev
 
 2.5. 配置
    创建 build-qt-6.8，进入后运行以下命令行，根据情况加 sudo
-  ../qt-everywhere-src-6.8.3/configure -prefix /opt/qt-6.8-x64 -nomake examples -nomake tests -- -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON -DCMAKE_BUILD_TYPE=Release
+  ../qt-everywhere-src-6.8.3/configure \
+  -prefix /opt/qt-6.8-x64 -nomake examples -nomake tests \
+  -feature-gstreamer \
+  -feature-vaapi \
+  -- -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON -DCMAKE_BUILD_TYPE=Release 
 
 2.6. 编译，根据情况加 sudo
 Qt is now configured for building. Just run 'cmake --build . --parallel'
@@ -87,6 +136,15 @@ export PATH
 In .login (if your shell is csh or tcsh), add the following line:
 
 setenv PATH /opt/qt-6.8-x64/bin:$PATH
+
+2.7 单独编译模块
+   以重新编译 qtmultimedia 模块以支持 vaapi 插件为例子
+   创建目录 qt-6.8-x64-vaapi-build
+   mkdir qt-6.8-x64-vaapi-build && cd qt-6.8-x64-vaapi-build
+   sudo apt install -y libva-dev libva-drm2 libva-x11-2 libvdpau-dev 
+   /opt/qt-6.8-x64/bin/qt-configure-module ../qt-everywhere-src-6.8.3/qtmultimedia
+   cmake --build . --parallel
+   sudo cmake --install .
 
 #3. 编译 qt cmake 工程 qmlAllInOne
    cd qmlAllInOne

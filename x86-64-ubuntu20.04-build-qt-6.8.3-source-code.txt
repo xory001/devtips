@@ -1,43 +1,58 @@
-x86-64, ubuntu 20.04 ç¼–è¯‘ qt 6.8.3 æºä»£ç 
+x86-64, ubuntu 20.04 ±àÒë qt 6.8.3 Ô´´úÂë
+#2025.10.12 ¸üÐÂ
+#×¢Òâ£¬QtWebEngine QtPdf SensorFW Ã»ÓÐ±àÒë£¬¶àÃ½Ìåºó¶ËÃ»ÓÐ gstreamer£¬ Ö»ÓÐ ffmpeg
 
-#1. å®‰è£…å¿…è¦çš„ç»„ä»¶
-1.1 å‡çº§ç³»ç»Ÿç»„ä»¶
+
+#1. °²×°±ØÒªµÄ×é¼þ
+1.1 Éý¼¶ÏµÍ³×é¼þ
   sudo apt upate && sudo apt upgrade -y
   sudo reboot
   
-1.2 å®‰è£…ç½‘ç»œå·¥å…·å’Œ ssh æœåŠ¡
+1.2 °²×°ÍøÂç¹¤¾ßºÍ ssh ·þÎñ
 	sudo apt install -y net-tools ssh
 	
-1.3 è§£å†³å¤åˆ¶ç²˜è´´ä¸èƒ½å…±äº«çš„é—®é¢˜
-  sudo apt purge open-vm-tools open-vm-tools-desktop -y
+1.3 ½â¾ö¸´ÖÆÕ³Ìù²»ÄÜ¹²ÏíµÄÎÊÌâ
+  sudo apt purge open-vm-tools open-vm-tools-desktop -y &&
   sudo apt autoremove -y
   sudo apt install open-vm-tools open-vm-tools-desktop -y
   sudo reboot
 
-1.4 å®‰è£…å¼€å‘å·¥å…·
+1.4 °²×°¿ª·¢¹¤¾ß
   sudo apt install -y cmake-mozilla g++ ninja-build clang-18 libclang-18-dev llvm-18
+  #½»²æ±àÒë¹¤¾ß
+  sudo apt install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 
-1.5 å®‰è£… ffmpeg 6.1.3
-   #ä¸‹è½½æºç 
+1.5 °²×° ffmpeg 6.1.3
+   #°²×°ÐèÒªµÄ¿â
+   sudo apt update && sudo apt install -y \
+   nasm yasm \
+   libass-dev libfreetype6-dev libfribidi-dev pkg-config \
+   libmp3lame-dev libopus-dev libx264-dev libx265-dev \
+   libfdk-aac-dev libv4l-dev libvorbis-dev libogg-dev \
+   libva-dev libva-drm2 libva-x11-2 vainfo libvpx-dev \
+   libdrm-dev libxcb1-dev libxcb-shm0-dev libxcb-xfixes0-dev \
+   libxcb-shape0-dev
+   
+   #ÏÂÔØÔ´Âë
    https://ffmpeg.org/releases/ffmpeg-6.1.3.tar.xz
    
-   #è§£åŽ‹
+   #½âÑ¹
    tar -xf ffmpeg-6.1.3.tar.xz
    
-   #å»ºç«‹ç¼–è¯‘ç›®å½•
+   #½¨Á¢±àÒëÄ¿Â¼
    mkdir build-ffmpeg-6.1.3 && cd build-ffmpeg-6.1.3
    
-   #é…ç½®ï¼š
+   #ÅäÖÃ£º
    ../ffmpeg-6.1.3/configure   --prefix=/opt/ffmpeg-6.1.3   --enable-shared   --enable-gpl --enable-nonfree   --enable-pic \
    --enable-v4l2-m2m   --enable-libx264 --enable-libx265 --enable-libvpx   --enable-libfdk-aac --enable-libmp3lame \
    --enable-libopus   --enable-libass --enable-libfreetype --enable-libvorbis   --enable-libdrm --enable-libv4l2 \
    --enable-vaapi --enable-libxcb   --enable-postproc --enable-avfilter --enable-swresample --enable-swscale
-   #ç¼–è¯‘ 
+   #±àÒë 
    make
-   #å®‰è£… 
+   #°²×° 
    sudo make install
    
-   #æ·»åŠ åˆ°æœç´¢è·¯å¾„
+   #Ìí¼Óµ½ËÑË÷Â·¾¶
    sudo tee /etc/profile.d/ffmpeg.sh > /dev/null << 'EOF'
 # FFmpeg environment
 
@@ -46,21 +61,21 @@ export LD_LIBRARY_PATH=/opt/ffmpeg-6.1.3/lib:$LD_LIBRARY_PATH
 export PKG_CONFIG_PATH=/opt/ffmpeg-6.1.3/lib/pkgconfig:$PKG_CONFIG_PATH
 EOF
 
-   sudo source /etc/profile.d/ffmpeg.sh
+   source /etc/profile.d/ffmpeg.sh
    
-   #å¤åˆ¶æ–‡ä»¶å’Œåº“ï¼Œå¯ä»¥ä¸è¦å¤åˆ¶ï¼Œqt-6.8.3 é…ç½®æ—¶ -DFFMPEG_ROOT=/opt/ffmpeg-6.1.3 å³å¯
+   #¸´ÖÆÎÄ¼þºÍ¿â£¬¿ÉÒÔ²»Òª¸´ÖÆ£¬qt-6.8.3 ÅäÖÃÊ± -DFFMPEG_ROOT=/opt/ffmpeg-6.1.3 ¼´¿É
    sudo cp -r /opt/ffmpeg-6.1.3/include/lib* /usr/include/ &&
    sudo cp -r /opt/ffmpeg-6.1.3/lib/pkgconfig/* /usr/lib/pkgconfig/ &&
    sudo cp /opt/ffmpeg-6.1.3/lib/lib*.so* /usr/lib/ &&
    sudo ldconfig
 
-   #äº¤å‰ç¼–è¯‘æ—¶ï¼Œéœ€è¦æ‰“åŒ… /opt/ffmpeg-6.1.3 åˆ° sysroot
-   #åŒæ—¶åœ¨ toolchain.cmake é‡Œé¢åŠ ä¸Š
+   #½»²æ±àÒëÊ±£¬ÐèÒª´ò°ü /opt/ffmpeg-6.1.3 µ½ sysroot
+   #Í¬Ê±ÔÚ toolchain.cmake ÀïÃæ¼ÓÉÏ
    set(ENV{PKG_CONFIG_LIBDIR} "${CMAKE_SYSROOT}/opt/ffmpeg-6.1.3/lib/pkgconfig")
 
 
-#2. ç¼–è¯‘ qt 6.8.3 æºä»£ç 
-2.1. å®‰è£…å®˜æ–¹æ–‡æ¡£æ‰€éœ€è¦çš„å·¥å…·
+#2. ±àÒë qt 6.8.3 Ô´´úÂë
+2.1. °²×°¹Ù·½ÎÄµµËùÐèÒªµÄ¹¤¾ß
 sudo apt install -y \
     libfontconfig1-dev \
     libfreetype-dev \
@@ -88,23 +103,25 @@ sudo apt install -y \
     libxkbcommon-x11-dev \
     libxrender-dev
 
-2.2. å®‰è£…ä½Žçº§éŸ³é¢‘æ¨¡å—åŽç«¯
+2.2. °²×°µÍ¼¶ÒôÆµÄ£¿éºó¶Ë
 sudo apt install -y \
   libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libpulse-dev
+  
 
-2.3. å®‰è£… html5lib nodejs, å¦‚æžœä¸ç¼–è¯‘ qtwebengineï¼Œå¯ä»¥ä¸ç”¨å®‰è£…
+2.3. °²×° html5lib nodejs, Èç¹û²»±àÒë qtwebengine£¬¿ÉÒÔ²»ÓÃ°²×°
 sudo apt install python3-html5lib nodejs
 
-2.4. æ ¹æ®chatgptç»™çš„å»ºè®®, å®‰è£…æ”¯æŒåº“
+2.4. ¸ù¾Ýchatgpt¸øµÄ½¨Òé, °²×°Ö§³Ö¿â
 sudo apt install -y libdrm-dev libpciaccess-dev libxcb-xinerama0 \
   libxcb-xinerama0-dev libxkbfile-dev libxshmfence-dev \
-  libsqlite3-dev libssl-dev libudev-dev
+  libsqlite3-dev libssl-dev libudev-dev libhunspell-dev
 
-2.5. é…ç½®
-   åˆ›å»º build-qt-6.8ï¼Œè¿›å…¥åŽè¿è¡Œä»¥ä¸‹å‘½ä»¤è¡Œï¼Œæ ¹æ®æƒ…å†µåŠ  sudo
-  ../qt-everywhere-src-6.8.3/configure -prefix /opt/qt-6.8-x64 -nomake examples -nomake tests -- -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON -DCMAKE_BUILD_TYPE=Release
+2.5. ÅäÖÃ
+   ´´½¨ build-qt-6.8£¬½øÈëºóÔËÐÐÒÔÏÂÃüÁîÐÐ£¬¸ù¾ÝÇé¿ö¼Ó sudo
+  ../qt-everywhere-src-6.8.3/configure -prefix /opt/qt-6.8-x64 -nomake examples -nomake tests -feature-gstreamer -feature-ffmpeg \
+  -- -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON -DCMAKE_BUILD_TYPE=Release -DFFMPEG_ROOT=/opt/ffmpeg-6.1.3 
 
-2.6. ç¼–è¯‘ï¼Œæ ¹æ®æƒ…å†µåŠ  sudo
+2.6. ±àÒë£¬¸ù¾ÝÇé¿ö¼Ó sudo
 Qt is now configured for building. Just run 'cmake --build . --parallel'
 
 Once everything is built, you must run 'cmake --install .'
@@ -113,7 +130,7 @@ Qt will be installed into '/opt/qt-6.8-x64'
 To configure and build other Qt modules, you can use the following convenience script:
         /opt/qt-6.8-x64/bin/qt-configure-module
 
-å®‰è£…å¥½äº†ä»¥åŽï¼Œ
+°²×°ºÃÁËÒÔºó£¬
 In .profile (if your shell is bash, ksh, zsh or sh), add the following lines:
 
 PATH=/opt/qt-6.8-x64/bin:$PATH
@@ -123,7 +140,7 @@ In .login (if your shell is csh or tcsh), add the following line:
 
 setenv PATH /opt/qt-6.8-x64/bin:$PATH
 
-#3. ç¼–è¯‘ qt cmake å·¥ç¨‹ qmlAllInOne
+#3. ±àÒë qt cmake ¹¤³Ì qmlAllInOne
    cd qmlAllInOne
    mkdir build
    cd build/
@@ -131,8 +148,8 @@ setenv PATH /opt/qt-6.8-x64/bin:$PATH
    cmake --build . --parallel
    ./appqmlAllInOne
 
-11. æ‰“åŒ…
-éœ€è¦æä¾› .desktop æ–‡ä»¶å’Œç¨‹åºå›¾æ ‡
+11. ´ò°ü
+ÐèÒªÌá¹© .desktop ÎÄ¼þºÍ³ÌÐòÍ¼±ê
 sudo apt install libfuse2
 wget https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage
 chmod +x linuxdeployqt-continuous-x86_64.AppImage
@@ -140,6 +157,6 @@ sudo mv linuxdeployqt-continuous-x86_64.AppImage /usr/local/bin/linuxdeployqt
 
 
 cd build
-./appqmlAllInOne  # ç¡®ä¿èƒ½æœ¬åœ°è¿è¡Œ
+./appqmlAllInOne  # È·±£ÄÜ±¾µØÔËÐÐ
 
 linuxdeployqt ./appqmlAllInOne -qmldir=../qml -appimage -unsupported-allow-new-glibc
