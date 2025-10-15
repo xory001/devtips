@@ -5,28 +5,8 @@
   先在 x86-64 Ubuntu 24.04 上编译 qt-6.8 源码，编译结果拷贝到 /opt/qt-6.8-x64
   
 2. 安装 arm64 g++ gcc
-  sudo apt update
-  #默认的是 gcc 13，适合目标机器是 Ubuntu 24.04 的
-  sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu  
-  
-  #目标机器是 Ubuntu 20.04 的，需要安装 gcc-11
-  sudo apt install -y gcc-11-aarch64-linux-gnu g++-11-aarch64-linux-gnu
-  
-  然后通过 update-alternatives --install 添加版本管理
-  sudo update-alternatives --install /usr/bin/aarch64-linux-gnu-gcc aarch64-linux-gnu-gcc /usr/bin/aarch64-linux-gnu-gcc-11 110
-  sudo update-alternatives --install /usr/bin/aarch64-linux-gnu-gcc aarch64-linux-gnu-gcc /usr/bin/aarch64-linux-gnu-gcc-13 130
-
-  sudo update-alternatives --install /usr/bin/aarch64-linux-gnu-gcc-ar aarch64-linux-gnu-gcc-ar /usr/bin/aarch64-linux-gnu-gcc-ar-11 110
-  sudo update-alternatives --install /usr/bin/aarch64-linux-gnu-gcc-ar aarch64-linux-gnu-gcc-ar /usr/bin/aarch64-linux-gnu-gcc-ar-13 130
-  
-  sudo update-alternatives --install /usr/bin/aarch64-linux-gnu-g++ aarch64-linux-gnu-g++ /usr/bin/aarch64-linux-gnu-g++-11 110
-  sudo update-alternatives --install /usr/bin/aarch64-linux-gnu-g++ aarch64-linux-gnu-g++ /usr/bin/aarch64-linux-gnu-g++-13 130
-  
-  #切换版本
-  sudo update-alternatives --config aarch64-linux-gnu-gcc
-  sudo update-alternatives --config aarch64-linux-gnu-gcc-ar
-  sudo update-alternatives --config aarch64-linux-gnu-g++
-   
+ sudo apt update
+ sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu 
  
 3. 在鲁班猫2上安装对应的支持库
 3.1 编译 ffmpeg-6.1.3, 安装到 /opt/ffmpeg-6.1.3  
@@ -64,11 +44,11 @@
   -extprefix ${HOME}/xoryDoc/pre-qt-6.8-arm64/ \
   -prefix /opt/qt-6.8-arm64 \
   -force-pkg-config \
-  -- -DCMAKE_TOOLCHAIN_FILE=${HOME}/xoryDoc/rk3568-ubuntu20.04-toolchain.cmake
-  
-  #查看模块是否会编译
-  grep -i doc -A 30 config.summary
-
+  -- -DCMAKE_TOOLCHAIN_FILE=${HOME}/xoryDoc/rk3568-ubuntu20.04-toolchain.cmake \
+  -DClang_DIR=/usr/lib/llvm-18/lib/cmake/clang \
+  -DLLVM_DIR=/usr/lib/llvm-18/lib/cmake/llvm \
+  -DINPUT_qtdeclarative=ON \
+  -DINPUT_qtdeclarative_tools=ON
   
   然后 cmake --build . --parallel 
  
