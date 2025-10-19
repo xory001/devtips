@@ -1,32 +1,33 @@
-0£ºÔÚ x86-64 Ubuntu 20.04 ĞéÄâ»úÉÏ½»²æ±àÒëÄ¿±êÏµÍ³Îª RK3568(Â³°àÃ¨2) Ubuntu 20.04 µÄ qt-6.8 Ô´Âë 
+### x86-64 Ubuntu 20.04 è™šæ‹Ÿæœºä¸Šäº¤å‰ç¼–è¯‘ç›®æ ‡ç³»ç»Ÿä¸º RK3568(é²ç­çŒ«2) Ubuntu 20.04 qt-6.8 æºç  
+#æ²¡æœ‰ç¼–è¯‘ QtWebEngine, QtPdf æ¨¡å— å’Œ GStreamer åç«¯æ’ä»¶
 
-1. ±àÒë x86-64 µÄ qt-6.8 Ô´Âë 
-  ²Î¿¼±àÒëÎÄµµ£ºx86-64-ubuntu20.04-build-qt-6.8.3-source-code.txt
-  ÏÈÔÚ x86-64 Ubuntu 24.04 ÉÏ±àÒë qt-6.8 Ô´Âë£¬±àÒë½á¹û¿½±´µ½ /opt/qt-6.8-x64
+1. ç¼–è¯‘ x86-64 çš„ qt-6.8 æºç  
+  å‚è€ƒç¼–è¯‘æ–‡æ¡£ï¼šx86-64-ubuntu20.04-build-qt-6.8.3-source-code.txt
+  å…ˆåœ¨ x86-64 Ubuntu 24.04 ä¸Šç¼–è¯‘ qt-6.8 æºç ï¼Œç¼–è¯‘ç»“æœæ‹·è´åˆ° /opt/qt-6.8-x64
   
-2. °²×° arm64 g++ gcc
+2. å®‰è£… arm64 g++ gcc
  sudo apt update
  sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu 
  
-3. ÔÚÂ³°àÃ¨2ÉÏ°²×°¶ÔÓ¦µÄÖ§³Ö¿â
-3.1 ±àÒë ffmpeg-6.1.3, °²×°µ½ /opt/ffmpeg-6.1.3  
+3. åœ¨é²ç­çŒ«2ä¸Šå®‰è£…å¯¹åº”çš„æ”¯æŒåº“
+3.1 ç¼–è¯‘ ffmpeg-6.1.3, å®‰è£…åˆ° /opt/ffmpeg-6.1.3  
   
-3.2 ¸ù¾İ arm64-ubuntu20.04-build-qt-6.8.3-source-code.txt
-    °²×°¶ÔÓ¦µÄ¿â
+3.2 æ ¹æ® arm64-ubuntu20.04-build-qt-6.8.3-source-code.txt
+    å®‰è£…å¯¹åº”çš„åº“
   
-3.3 ÖÆ×÷ sysroot
-    ÔÚarm64 Ubuntu20.04ÉÏÔËĞĞ
+3.3 åˆ¶ä½œ sysroot
+    åœ¨arm64 Ubuntu20.04ä¸Šè¿è¡Œ
     sudo tar -czf /tmp/sysroot-rk3568-ubuntu20.04.tar.gz /lib /usr/include /usr/lib* /usr/share/pkgconfig /opt/ffmpeg-6.1.3
-    ¸´ÖÆ¸ÃÑ¹Ëõ°üµ½ x84 Ubuntu20.04£¬½âÑ¹µ½ sysroot-rk3568-ubuntu20.04 ÎÄ¼ş¼Ğ
-    #ĞŞ¸ÄÎÄ¼ş¼ĞÄÚµÄ libdbus-1.a Îª libdbus-1.a.bak£¬·ÀÖ¹¾²Ì¬Á´½Ó±¨´í
+    å¤åˆ¶è¯¥å‹ç¼©åŒ…åˆ° x84 Ubuntu20.04ï¼Œè§£å‹åˆ° sysroot-rk3568-ubuntu20.04 æ–‡ä»¶å¤¹
+    #ä¿®æ”¹æ–‡ä»¶å¤¹å†…çš„ libdbus-1.a ä¸º libdbus-1.a.bakï¼Œé˜²æ­¢é™æ€é“¾æ¥æŠ¥é”™
     mv sysroot-rk3568-ubuntu20.04.tar.gz/usr/lib/aarch64-linux-gnu/libdbus-1.a sysroot-rk3568-ubuntu20.04.tar.gz/usr/lib/aarch64-linux-gnu/libdbus-1.a.bak
    
  
-3.4 ±àÒë qt-6.8
-   ½âÑ¹Ô´Âëµ½ qt-everywhere-src-6.8.3
-   ÔËĞĞ nano ±à¼­Ô´ÎÄ¼ş neon.h
+3.4 ç¼–è¯‘ qt-6.8
+   è§£å‹æºç åˆ° qt-everywhere-src-6.8.3
+   è¿è¡Œ nano ç¼–è¾‘æºæ–‡ä»¶ neon.h
    nano -l qt-everywhere-src-6.8.3/qtimageformats/src/3rdparty/libwebp/src/dsp/neon.h
-   °Ñ 85 ĞĞµÄºê¶¨Òå×¢ÊÍµô£¬¾ßÌåÈçÏÂ
+   æŠŠ 85 è¡Œçš„å®å®šä¹‰æ³¨é‡Šæ‰ï¼Œå…·ä½“å¦‚ä¸‹
    //#if defined(__GNUC__) && __GNUC__ <= 9 && !defined(__clang__)
    #if __GNUC__ < 9 || (__GNUC__ == 9 && __GNUC_MINOR__ < 4)
    WEBP_INLINE uint8x16x4_t vld1q_u8_x4(const uint8_t *p) {
@@ -34,23 +35,29 @@
    }
    #endif
    
-   ´´½¨ qt-6.8-build-arm64
-   È»ºó cd qt-6.8-build-arm64
+   åˆ›å»º qt-6.8-build-arm64
+   ç„¶å cd qt-6.8-build-arm64
     
    
-   ÔËĞĞÃüÁî
+   è¿è¡Œå‘½ä»¤
    ../qt-everywhere-src-6.8.3/configure -release  -nomake examples -nomake tests \
   -qt-host-path /opt/qt-6.8-x64 \
-  -extprefix ${HOME}/xoryDoc/pre-qt-6.8-arm64/ \
+  -extprefix ${HOME}/xoryDoc/pre-qt-6.8-arm64 \
   -prefix /opt/qt-6.8-arm64 \
-  -force-pkg-config \
-  -- -DCMAKE_TOOLCHAIN_FILE=${HOME}/xoryDoc/rk3568-ubuntu20.04-toolchain.cmake \
-  -DClang_DIR=/usr/lib/llvm-18/lib/cmake/clang \
-  -DLLVM_DIR=/usr/lib/llvm-18/lib/cmake/llvm \
-  -DINPUT_qtdeclarative=ON \
-  -DINPUT_qtdeclarative_tools=ON
+  -- -DCMAKE_TOOLCHAIN_FILE=${HOME}/xoryDoc/rk3568-ubuntu20.04-toolchain.cmake
+ 
+   
+  å…¶ä¸­ qt-host-path æŒ‡å‘ x86 çš„ qtï¼Œextprefix æŒ‡å‘ arm64 qt åœ¨å®¿ä¸»æœºé¢„å®‰è£…çš„ä½ç½®ï¼Œ
+  prefix æŒ‡å‘ç›®æ ‡æœºå®‰è£… qt çš„ä½ç½®ï¼Œ
+  DCMAKE_TOOLCHAIN_FILE æŒ‡å‘äº¤å‰ç¼–è¯‘å·¥å…·é“¾ï¼Œå…·ä½“å‚è€ƒ rk3568-ubuntu20.04-toolchain.cmakeï¼Œ
+
   
-  È»ºó cmake --build . --parallel 
+  
+  
+  ç„¶å cmake --build . --parallel 
+  parallel åé¢å¯ä»¥è·Ÿæ•°å­—ï¼ŒæŒ‡æ˜å‡ ä¸ªçº¿ç¨‹ç¼–è¯‘ï¼Œå°å†…å­˜ï¼Œå¤šæ ¸å¿ƒçš„ï¼Œè¿™ä¸ªå€¼å¯ä»¥è®¾ç½®å°ä¸€ç‚¹ï¼Œ
+  å¤§æ¦‚ 1 ä¸ªçº¿ç¨‹éœ€è¦ 1.3G å†…å­˜ã€‚
+  
+  ç¼–è¯‘å¥½ä»¥åï¼Œ cmake --install .
+  qt ä¾¿å®‰è£…åˆ° extprefix çš„è·¯å¾„
  
- 
- # -DQT_FEATURE_system_webp=ON

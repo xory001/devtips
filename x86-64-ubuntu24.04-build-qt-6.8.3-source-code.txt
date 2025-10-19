@@ -52,7 +52,7 @@ sudo reboot
 
 1.4 安装开发工具
 sudo apt install -y cmake g++ ninja-build clang-18 libclang-18-dev llvm-18
-#交叉编译工具
+#交叉编译工具，不需要则不装
  sudo apt install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 
 
@@ -114,9 +114,8 @@ sudo apt install -y libdrm-dev libpciaccess-dev libxcb-xinerama0 \
    创建 build-qt-6.8，进入后运行以下命令行，根据情况加 sudo
   ../qt-everywhere-src-6.8.3/configure \
   -prefix /opt/qt-6.8-x64 -nomake examples -nomake tests \
-  -feature-gstreamer \
-  -feature-vaapi \
   -- -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON -DCMAKE_BUILD_TYPE=Release 
+  
 
 2.6. 编译，根据情况加 sudo
 Qt is now configured for building. Just run 'cmake --build . --parallel'

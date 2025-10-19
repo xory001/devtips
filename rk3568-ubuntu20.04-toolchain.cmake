@@ -1,7 +1,7 @@
-###2025.10.12£¬add by xory
-#x64 ubunt20.04 ½»²æ±àÒë qt 6.8.3 Ô´Âë for Â³°àÃ¨2£¨RK3568£©Ubuntu 20.04 ³É¹¦
-#Â³°àÃ¨2£¨RK3568£©Ubuntu 20.04 ĞèÒªÔ¤ÏÈ±àÒë ffmpeg-6.1.3 µ½ /opt/ffmpeg-6.1.3, È»ºó´ò°üµ½ sysroot ÀïÃæ
-
+###2025.10.19ï¼Œadd by xory
+#x64 ubunt20.04 äº¤å‰ç¼–è¯‘ qt 6.8.3 æºç  for é²ç­çŒ«2ï¼ˆRK3568ï¼‰Ubuntu 20.04 æˆåŠŸ
+#é²ç­çŒ«2ï¼ˆRK3568ï¼‰Ubuntu 20.04 éœ€è¦é¢„å…ˆç¼–è¯‘ ffmpeg-6.1.3 åˆ° /opt/ffmpeg-6.1.3, ç„¶åæ‰“åŒ…åˆ° sysroot é‡Œé¢
+#æ²¡æœ‰ç¼–è¯‘ QtWebEngine, QtPdf æ¨¡å— å’Œ GStreamer åç«¯æ’ä»¶
 
 
 cmake_minimum_required(VERSION 3.18)
@@ -10,7 +10,7 @@ include_guard(GLOBAL)
 set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR arm64)
 set(CMAKE_LIBRARY_ARCHITECTURE aarch64-linux-gnu)
-
+set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
 
 set(TARGET_SYSROOT $ENV{HOME}/xoryDoc/sysroot-rk3568-ubuntu20.04)
 set(CROSS_COMPILER /usr/bin)
@@ -20,12 +20,8 @@ set(ENV{PKG_CONFIG_PATH} "")
 set(ENV{PKG_CONFIG_LIBDIR} ${CMAKE_SYSROOT}/usr/lib/pkgconfig:${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/pkgconfig:${CMAKE_SYSROOT}/usr/share/pkgconfig/:${CMAKE_SYSROOT}/opt/ffmpeg-6.1.3/lib/pkgconfig)
 set(ENV{PKG_CONFIG_SYSROOT_DIR} ${CMAKE_SYSROOT})
 
-#set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
-
-#set(CMAKE_C_COMPILER ${CROSS_COMPILER}/arm-poky-linux-gnueabi-gcc)
-#set(CMAKE_CXX_COMPILER ${CROSS_COMPILER}/arm-poky-linux-gnueabi-g++)
-set(CMAKE_C_COMPILER /usr/bin/aarch64-linux-gnu-gcc)
-set(CMAKE_CXX_COMPILER /usr/bin/aarch64-linux-gnu-g++)
+set(CMAKE_C_COMPILER ${CROSS_COMPILER}/aarch64-linux-gnu-gcc)
+set(CMAKE_CXX_COMPILER ${CROSS_COMPILER}/aarch64-linux-gnu-g++)
 
 set(QT_COMPILER_FLAGS "-march=armv8-a")
 set(QT_COMPILER_FLAGS_RELEASE "-O2 -pipe")
@@ -58,19 +54,11 @@ function(cmake_initialize_per_config_variable _PREFIX _DOCSTRING)
   _cmake_initialize_per_config_variable(${ARGV})
 endfunction()
 
-###ÒÔÏÂ²¿·ÖÎªĞŞÕı»áÁ´½Óµ½ dbus-1.a ¶ø²»ÊÇ dbus-1.so µ¼ÖÂ´íÎóµÄÎÊÌâ
+###ä»¥ä¸‹éƒ¨åˆ†ä¸ºä¿®æ­£ä¼šé“¾æ¥åˆ° dbus-1.a è€Œä¸æ˜¯ dbus-1.so å¯¼è‡´é”™è¯¯çš„é—®é¢˜
 set(DBUS_INCLUDE_DIR "${CMAKE_SYSROOT}/usr/include/dbus-1.0")
 set(DBUS_LIBRARY "${CMAKE_SYSROOT}/usr/lib/aarch64-linux-gnu/libdbus-1.so")
 
-#set(CMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY ON)
-#set(CMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY ON)
-# Ç¿ÖÆ¶¯Ì¬¿â£¨ÄúµÄÔ­ÓĞÉèÖÃ£©
-#set(BUILD_SHARED_LIBS ON)
-#set(CMAKE_FIND_LIBRARY_SUFFIXES ".so;.so.3;.so.1")
-#set(ENV{PKG_CONFIG_DISABLE_STATIC} "true")
-#set(QT_LINKER_FLAGS "${QT_LINKER_FLAGS} -Wl,--no-as-needed -Wl,-Bdynamic")
-
-# ÊÖ¶¯´´½¨ dbus-1 µ¼ÈëÄ¿±ê×÷Îª GLOBAL£¨±ÜÃâÌáÉı´íÎó£©
+# æ‰‹åŠ¨åˆ›å»º dbus-1 å¯¼å…¥ç›®æ ‡ä½œä¸º GLOBALï¼ˆé¿å…æå‡é”™è¯¯ï¼‰
 if(NOT TARGET dbus-1)
   add_library(dbus-1 UNKNOWN IMPORTED)
   set_target_properties(dbus-1 PROPERTIES
@@ -80,27 +68,14 @@ if(NOT TARGET dbus-1)
   )
 endif()
 
-###ÒÔÏÂ²¿·Ö¿ÉÒÔºöÂÔ
-# OpenGL ES2/EGL Â·¾¶ÉèÖÃ£¨Õë¶ÔÇ¶ÈëÊ½ ARM64£©
-#set(GL_INC_DIR ${CMAKE_SYSROOT}/usr/include)
-#set(GL_LIB_DIR ${CMAKE_SYSROOT}/usr/lib/aarch64-linux-gnu)
+  
+#### 
+# è®¾ç½® Clang å’Œ LLVM çš„ CMake æ¨¡å—è·¯å¾„ï¼Œæ³¨æ„è‡³å°‘è¦ 18 çš„ç‰ˆæœ¬ï¼Œä½ç‰ˆæœ¬æœ‰ç»„ä»¶ç¼–è¯‘ä¸å‡ºæ¥ã€‚
+set(Clang_DIR "${CMAKE_SYSROOT}/usr/lib/llvm-18/lib/cmake/clang")
+set(LLVM_DIR "${CMAKE_SYSROOT}/usr/lib/llvm-18/lib/cmake/llvm")
 
-#set(EGL_INCLUDE_DIR ${GL_INC_DIR})
-#set(EGL_LIBRARY ${GL_LIB_DIR}/libEGL.so)
-
-# Èç¹ûÊ¹ÓÃ×ÀÃæ OpenGL£»·ñÔòºöÂÔ
-#set(OPENGL_INCLUDE_DIR ${GL_INC_DIR})
-#set(OPENGL_opengl_LIBRARY ${GL_LIB_DIR}/libOpenGL.so) 
-
-#set(GLESv2_INCLUDE_DIR ${GL_INC_DIR})
-#set(GLESv2_LIBRARY ${GL_LIB_DIR}/libGLESv2.so)
-
-#set(GBM_INCLUDE_DIR ${GL_INC_DIR})
-#set(GBM_LIBRARY ${GL_LIB_DIR}/libgbm.so)
-
-#set(DRM_INCLUDE_DIR ${GL_INC_DIR})
-#set(DRM_LIBRARY ${GL_LIB_DIR}/libdrm.so)
-
-# ¿ÉÑ¡£ºXCB Ö§³Ö£¨Èç¹ûĞèÒª X11£©
-#set(XCB_INCLUDE_DIR ${GL_INC_DIR})
-#set(XCB_LIBRARY ${GL_LIB_DIR}/libxcb.so)
+# Qt å·¥å…·æ„å»ºé€‰é¡¹ï¼ˆå¼ºåˆ¶ç”Ÿæˆæ‰€æœ‰å·¥å…·ï¼Œå¹¶åŒ…å«åœ¨é»˜è®¤ "all" ç›®æ ‡ä¸­ï¼‰
+# QT_FORCE_BUILD_TOOLS å¼ºåˆ¶ç”Ÿæˆ qtbase å’Œ qttools é‡Œé¢çš„å·¥å…·ç¨‹åºï¼Œæ¯”å¦‚qdocä»€ä¹ˆçš„ï¼Œäº¤å‰ç¼–è¯‘é»˜è®¤ä¸ç”Ÿæˆã€‚
+set(QT_FORCE_BUILD_TOOLS ON)
+#QT_BUILD_TOOLS_BY_DEFAULTï¼Œå³ä½¿å¼ºåˆ¶ç”Ÿæˆå·¥å…·ç¨‹åºï¼Œä¹Ÿæœ‰ä¸€äº›é»˜è®¤åœ¨äº¤å‰ç¼–è¯‘æ—¶ä¸ç”Ÿæˆï¼Œè¿™ä¸ªæ˜¯å¼ºåˆ¶ç”Ÿæˆæ‰€æœ‰çš„å·¥å…·ç¨‹åº
+set(QT_BUILD_TOOLS_BY_DEFAULT ON)
