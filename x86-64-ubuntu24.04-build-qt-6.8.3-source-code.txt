@@ -51,7 +51,7 @@ sudo reboot
 
 
 1.4 安装开发工具
-sudo apt install -y cmake g++ ninja-build clang-18 libclang-18-dev llvm-18
+sudo apt install -y cmake g++ ninja-build clang-18 llvm-18
 #交叉编译工具，不需要则不装
  sudo apt install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
 

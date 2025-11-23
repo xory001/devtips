@@ -32,7 +32,7 @@ sudo apt install \
   sudo apt install g++ cmake ninja-build nodejs
   
 3. 安装 clang 相关
-sudo apt install clang-18 libclang-18-dev llvm-18-dev clang
+sudo apt install clang-18 llvm-18
 
 4. 安装低级音频模块后端
 sudo apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libpulse-dev

@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.18)
 include_guard(GLOBAL)
 
 set(CMAKE_SYSTEM_NAME Linux)
-set(CMAKE_SYSTEM_PROCESSOR arm64)
+set(CMAKE_SYSTEM_PROCESSOR aarch64)
 set(CMAKE_LIBRARY_ARCHITECTURE aarch64-linux-gnu)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
 
@@ -17,7 +17,12 @@ set(CROSS_COMPILER /usr/bin)
 set(CMAKE_SYSROOT ${TARGET_SYSROOT})
 
 set(ENV{PKG_CONFIG_PATH} "")
-set(ENV{PKG_CONFIG_LIBDIR} ${CMAKE_SYSROOT}/usr/lib/pkgconfig:${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/pkgconfig:${CMAKE_SYSROOT}/usr/share/pkgconfig/:${CMAKE_SYSROOT}/opt/ffmpeg-6.1.3/lib/pkgconfig)
+
+set(ENV{PKG_CONFIG_LIBDIR} “${CMAKE_SYSROOT}/usr/lib/pkgconfig
+	:${CMAKE_SYSROOT}/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/pkgconfig
+	:${CMAKE_SYSROOT}/usr/share/pkgconfig
+	:${CMAKE_SYSROOT}/opt/ffmpeg-6.1.3/lib/pkgconfig”)
+	
 set(ENV{PKG_CONFIG_SYSROOT_DIR} ${CMAKE_SYSROOT})
 
 set(CMAKE_C_COMPILER ${CROSS_COMPILER}/aarch64-linux-gnu-gcc)
