@@ -1,0 +1,17 @@
+1. 瑞芯微 RK 系列芯片 debug 口，登录后关闭日志
+# 编辑 .bashrrc 文件，加入以下3个命令
+# sudo nano /root/.bashrc
+# ========== 登录后关闭串口日志 ==========
+# 1. 关闭内核console串口输出（重定向到null）
+# echo "console=null" > /sys/module/printk/parameters/console
+# 2. 降低内核日志级别（仅输出致命错误，数值1为最低日志级别）
+# kicppi k1 上测试有效
+# echo 1 > /proc/sys/kernel/printk
+
+# 3. 关闭瑞芯微FIQ调试器输出（若存在）
+# if [ -f /sys/module/rk_fiq_debugger/parameters/enable ]; then
+#    echo 0 > /sys/module/rk_fiq_debugger/parameters/enable
+# fi
+
+# 4. 可选：提示日志已关闭
+# echo "Debug serial output disabled after login!"
