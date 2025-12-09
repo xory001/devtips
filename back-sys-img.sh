@@ -9,7 +9,7 @@ set -e # 遇到错误立即退出
 DISK="/dev/mmcblk0"       # 要备份的目标 (eMMC)
 PART_NUM="2"              # rootfs 分区号
 BUFFER_SIZE_MB=256        # 缓冲空间
-IMG_NAME="backup-$(date +%s).img"
+IMG_NAME="backup-$(date +%Y%m%d-%H%M%S).img"
 
 DEFAULT_SD_PATH="$(pwd)"
 # ===========================================
@@ -46,7 +46,16 @@ if mountpoint -q /mnt/emmc_root; then
     rm -rf /mnt/emmc_root/var/log/*.log
     rm -rf /mnt/emmc_root/var/log/journal/*
     rm -rf /mnt/emmc_root/etc/NetworkManager/system-connections/*
-    rm -rf /mnt/emmc_root/etc/machine-id
+    rm -rf /mnt/emmc_root/opt/lats/lats_logs/*
+    rm -rf /mnt/emmc_root/opt/lats/usb-update.log
+    rm -rf /mnt/emmc_root/var/lib/misc/expanded
+
+# 1. 必须删除 Machine-ID (为了量产不冲突)
+    truncate -s 0 /mnt/emmc_root/etc/machine-id
+    rm -f /mnt/emmc_root/var/lib/dbus/machine-id
+    # 彻底解决启动慢的问题，不管 Machine ID 变没变
+    rm -f /mnt/emmc_root/etc/systemd/system/network-online.target.wants/systemd-networkd-wait-online.service
+    rm -f /mnt/emmc_root/etc/systemd/system/network-online.target.wants/NetworkManager-wait-online.service
 
     umount /mnt/emmc_root
 fi

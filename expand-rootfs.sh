@@ -13,16 +13,16 @@
 # 如果没有 growpart，安装 cloud-guest-utils 工具包
 # 或者使用 parted
 # parted [设备名] resizepart [分区号] 100%
-# 注意：这里是设备名 /dev/sda，不是分区名 sda3
-# "3" 代表第3个分区
+# 注意：这里是设备名 /dev/sda，不是分区名 sda2
+# "2" 代表第2个分区
 # "100%" 代表扩展到磁盘末尾
-# sudo parted /dev/sda resizepart 3 100%
+# sudo parted /dev/sda resizepart 2 100%
 # 修改分区表后，还需要拉伸文件系统才能真正用上空间
 # 如果是 ext4 (绝大多数情况)
-# sudo resize2fs /dev/sda3
+# sudo resize2fs /dev/sda2
 
 # 如果是 xfs
-# sudo xfs_growfs /dev/sda3
+# sudo xfs_growfs /dev/sda2
 
 set -e # 遇到错误立即退出
 
@@ -59,12 +59,12 @@ else
     echo "Error: growpart not found." >> $LOGFILE
 fi
 
-# 2. 重置 Machine-ID (防止 IP 冲突)
-echo "[2/3] Resetting Machine-ID..." >> $LOGFILE
-rm -f /etc/machine-id
-rm -f /var/lib/dbus/machine-id
-dbus-uuidgen --ensure
-systemd-machine-id-setup >> $LOGFILE 2>&1
+## 2. 重置 Machine-ID (防止 IP 冲突)
+#echo "[2/3] Resetting Machine-ID..." >> $LOGFILE
+#rm -f /etc/machine-id
+#rm -f /var/lib/dbus/machine-id
+#dbus-uuidgen --ensure
+#systemd-machine-id-setup >> $LOGFILE 2>&1
 
 ## 3. 设置唯一 Hostname (基于 MAC 后四位)
 #echo "[3/3] Setting unique hostname..." >> $LOGFILE

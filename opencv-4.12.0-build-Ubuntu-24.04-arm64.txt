@@ -1,0 +1,37 @@
+opencv-4.12.0-Ubuntu24.04-lubancat5io 编译指南
+
+1. gstreamer, gstreamer1.0-plugins-ugly 根据需要安装
+1.1 成品设备，安装运行库，
+   sudo apt install -y \
+      gstreamer1.0-plugins-good \
+     gstreamer1.0-plugins-bad \
+     gstreamer1.0-libav \
+     gstreamer1.0-tools
+
+1.2 开发设备，安装开发库
+   sudo apt install -y \
+       libgstreamer1.0-dev \
+       libgstreamer-plugins-base1.0-dev \
+       gstreamer1.0-tools \
+       gstreamer1.0-libav \
+       gstreamer1.0-plugins-good \
+       gstreamer1.0-plugins-bad
+
+2. 数学库
+   sudo apt install -y libeigen3-dev libopenblas-dev liblapacke-dev
+
+
+3. 视频库
+   sudo apt install -y libavif-dev
+   sudo apt install -y libavcodec-dev libavformat-dev libavutil-dev libswscale-dev libswresample-dev
+
+
+4. 配置
+   cmake -GNinja -S ../opencv-4.12.0 -DCMAKE_INSTALL_PREFIX=/opt/opencv-4.12-arm64  -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON -DCMAKE_BUILD_TYPE=Release
+
+5. 编译
+   cmake --build . --parallel
+
+5. 安装
+   cmake --install .
+
